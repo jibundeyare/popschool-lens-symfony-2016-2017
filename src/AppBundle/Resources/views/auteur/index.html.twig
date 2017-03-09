@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Auteurs list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Coupedecheveux</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for auteur in auteurs %}
+            <tr>
+                <td><a href="{{ path('auteur_show', { 'id': auteur.id }) }}">{{ auteur.id }}</a></td>
+                <td>{{ auteur.nom }}</td>
+                <td>{{ auteur.prenom }}</td>
+                <td>{{ auteur.coupeDeCheveux }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('auteur_show', { 'id': auteur.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('auteur_edit', { 'id': auteur.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('auteur_new') }}">Create a new auteur</a>
+        </li>
+    </ul>
+{% endblock %}
