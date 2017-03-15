@@ -24,9 +24,15 @@ class ArticleType extends AbstractType
                     return $auteur->getPrenom() . ' ' . $auteur->getNom() . ' (coupe de cheveux: ' . $auteur->getCoupeDeCheveux() . ')';
                 },
             ])
+            ->add('tags', EntityType::class, [
+                'class' => 'AppBundle:Tag',
+                'choice_label' => 'nom',
+                'multiple' => true,
+                'expanded' => true,
+            ])
         ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

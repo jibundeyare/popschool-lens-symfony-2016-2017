@@ -105,5 +105,56 @@ class Tag
     {
         return $this->description;
     }
-}
 
+    /**
+     * Add article
+     *
+     * @param Article $article
+     *
+     * @return Tag
+     */
+    public function addArticle(Article $article)
+    {
+        $this->articles[] = $article;
+
+        return $this;
+    }
+
+    /**
+     * Remove article
+     *
+     * @param Article $article
+     *
+     * @return Tag
+     */
+    public function removeArticle(Article $article)
+    {
+        $this->articles->removeElement($article);
+
+        return $this;
+    }
+
+    /**
+     * Get articles
+     *
+     * @return ArrayCollection
+     */
+    public function getArticles()
+    {
+        return $this->articles;
+    }
+
+    /**
+     * Set articles
+     *
+     * @param ArrayCollection $articles cette liste doit contenir des objets de type Article
+     *
+     * @return Tag
+     */
+    public function setArticles(ArrayCollection $articles)
+    {
+        $this->articles = $articles;
+
+        return $this;
+    }
+}

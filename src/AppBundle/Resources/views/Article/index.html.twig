@@ -11,6 +11,7 @@
                 <th>Corps</th>
                 <th>Publication</th>
                 <th>Auteur</th>
+                <th>Tags</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,7 +22,12 @@
                 <td>{{ article.titre }}</td>
                 <td>{{ article.corps }}</td>
                 <td>{% if article.publication %}{{ article.publication|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ article.auteur.prenom }} {{ article.auteur.nom }}</td>
+                <td>{% if article.auteur %} {{ article.auteur.prenom }} {{ article.auteur.nom }} {% endif %}</td>
+                <td>
+                    {% for tag in article.tags %}
+                        {{ tag.nom }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </td>
                 <td>
                     <ul>
                         <li>

@@ -21,6 +21,18 @@
                 <th>Publication</th>
                 <td>{% if article.publication %}{{ article.publication|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
+            <tr>
+                <th>Auteur</th>
+                <td>{% if article.auteur %}{{ article.auteur.prenom }} {{ article.auteur.nom }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    {% for tag in article.tags %}
+                        {{ tag.nom }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
         </tbody>
     </table>
 

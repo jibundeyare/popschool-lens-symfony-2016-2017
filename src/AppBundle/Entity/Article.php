@@ -55,6 +55,7 @@ class Article
     /**
      * @var Auteur
      *
+     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Auteur", inversedBy="articles")
      * @ORM\JoinColumn(name="auteur_id", referencedColumnName="id")
      */
@@ -63,6 +64,10 @@ class Article
     /**
      * @var ArrayCollection
      *
+     * @Assert\Count(
+     *      min = 0,
+     *      max = 3
+     * )
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="articles")
      * @ORM\JoinTable(name="articles_tags")
      */
@@ -71,6 +76,7 @@ class Article
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->publication = new \DateTime();
     }
 
     /**
@@ -177,5 +183,57 @@ class Article
     public function getAuteur()
     {
         return $this->auteur;
+    }
+
+    /**
+     * Add tag
+     *
+     * @param Tag $tag
+     *
+     * @return Article
+     */
+    public function addTag(Tag $tag)
+    {
+        $this->tags[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Remove tag
+     *
+     * @param Tag $tag
+     *
+     * @return Article
+     */
+    public function removeTag(Tag $tag)
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * Get tags
+     *
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Set tags
+     *
+     * @param ArrayCollection $tags cette liste doit contenir des objets de type Tag
+     *
+     * @return Article
+     */
+    public function setTags(ArrayCollection $tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
     }
 }
