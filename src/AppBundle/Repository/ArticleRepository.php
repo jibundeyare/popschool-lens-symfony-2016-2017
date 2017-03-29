@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use \DateTime;
+
 /**
  * ArticleRepository
  *
@@ -10,4 +12,23 @@ namespace AppBundle\Repository;
  */
 class ArticleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllSorted()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.publication', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findAllFutur()
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.publication > :publication')
+            ->setParameter('publication', new DateTime())
+            ->orderBy('a.publication', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

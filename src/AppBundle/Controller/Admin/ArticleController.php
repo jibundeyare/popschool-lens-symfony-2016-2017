@@ -25,7 +25,24 @@ class ArticleController extends Controller
      */
     public function indexAction()
     {
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        $repository = $this->getDoctrine()->getRepository(Article::class);
+        $articles = $repository->findAllSorted();
+
+        return $this->render('AppBundle:Article:index.html.twig', array(
+            'articles' => $articles,
+        ));
+    }
+
+    /**
+     * Lists all article entities that are to be published.
+     *
+     * @Route("/futur", name="article_futur")
+     * @Method("GET")
+     */
+    public function futurAction()
+    {
+        $repository = $this->getDoctrine()->getRepository(Article::class);
+        $articles = $repository->findAllFutur();
 
         return $this->render('AppBundle:Article:index.html.twig', array(
             'articles' => $articles,
