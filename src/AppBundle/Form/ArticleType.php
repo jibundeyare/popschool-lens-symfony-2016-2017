@@ -2,6 +2,9 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Article;
+use AppBundle\Entity\Auteur;
+use AppBundle\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,13 +22,13 @@ class ArticleType extends AbstractType
             ->add('corps')
             ->add('publication')
             ->add('auteur', EntityType::class, [
-                'class' => 'AppBundle:Auteur',
+                'class' => Auteur::class,
                 'choice_label' => function($auteur) {
                     return $auteur->getPrenom() . ' ' . $auteur->getNom() . ' (coupe de cheveux: ' . $auteur->getCoupeDeCheveux() . ')';
                 },
             ])
             ->add('tags', EntityType::class, [
-                'class' => 'AppBundle:Tag',
+                'class' => Tag::class,
                 'choice_label' => 'nom',
                 'multiple' => true,
                 'expanded' => true,
@@ -39,7 +42,7 @@ class ArticleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Article'
+            'data_class' => Article::class
         ));
     }
 
@@ -50,6 +53,4 @@ class ArticleType extends AbstractType
     {
         return 'appbundle_article';
     }
-
-
 }

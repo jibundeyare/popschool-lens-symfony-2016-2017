@@ -1,8 +1,10 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Article;
+use AppBundle\Form\ArticleDeleteType;
+use AppBundle\Form\ArticleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Article controller.
  *
- * @Route("article")
+ * @Route("/admin/article")
  */
 class ArticleController extends Controller
 {
@@ -23,9 +25,7 @@ class ArticleController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $articles = $em->getRepository('AppBundle:Article')->findAll();
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
 
         return $this->render('AppBundle:Article:index.html.twig', array(
             'articles' => $articles,
@@ -41,13 +41,13 @@ class ArticleController extends Controller
     public function newAction(Request $request)
     {
         $article = new Article();
-        $form = $this->createForm('AppBundle\Form\ArticleType', $article);
+        $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
-            $em->flush($article);
+            $em->flush();
 
             return $this->redirectToRoute('article_show', array('id' => $article->getId()));
         }
@@ -66,7 +66,9 @@ class ArticleController extends Controller
      */
     public function showAction(Article $article)
     {
-        $deleteForm = $this->createDeleteForm($article);
+        $deleteForm = $this->createForm(ArticleDeleteType::class, $article, [
+            'action' => $this->generateUrl('article_delete', ['id' => $article->getId()]),
+        ]);
 
         return $this->render('AppBundle:Article:show.html.twig', array(
             'article' => $article,
@@ -82,8 +84,10 @@ class ArticleController extends Controller
      */
     public function editAction(Request $request, Article $article)
     {
-        $deleteForm = $this->createDeleteForm($article);
-        $editForm = $this->createForm('AppBundle\Form\ArticleType', $article);
+        $deleteForm = $this->createForm(ArticleDeleteType::class, $article, [
+            'action' => $this->generateUrl('article_delete', ['id' => $article->getId()]),
+        ]);
+        $editForm = $this->createForm(ArticleType::class, $article);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -107,31 +111,17 @@ class ArticleController extends Controller
      */
     public function deleteAction(Request $request, Article $article)
     {
-        $form = $this->createDeleteForm($article);
+        $form = $this->createForm(ArticleDeleteType::class, $article, [
+            'action' => $this->generateUrl('article_delete', ['id' => $article->getId()]),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($article);
-            $em->flush($article);
+            $em->flush();
         }
 
         return $this->redirectToRoute('article_index');
-    }
-
-    /**
-     * Creates a form to delete a article entity.
-     *
-     * @param Article $article The article entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Article $article)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('article_delete', array('id' => $article->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

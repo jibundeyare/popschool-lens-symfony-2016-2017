@@ -3,24 +3,10 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Auteur;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AuteurType extends AbstractType
+class AuteurDeleteType extends AbstractDeleteType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('coupeDeCheveux')
-        ;
-    }
-    
     /**
      * {@inheritdoc}
      */
@@ -36,6 +22,6 @@ class AuteurType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_auteur';
+        return 'appbundle_auteur_delete';
     }
 }

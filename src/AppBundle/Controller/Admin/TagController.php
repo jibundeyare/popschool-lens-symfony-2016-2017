@@ -1,16 +1,18 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Tag;
+use AppBundle\Form\TagType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tag controller.
  *
- * @Route("tag")
+ * @Route("/admin/tag")
  */
 class TagController extends Controller
 {
@@ -22,9 +24,7 @@ class TagController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $tags = $em->getRepository('AppBundle:Tag')->findAll();
+        $tags = $this->getDoctrine()->getRepository(Tag::class)->findAll();
 
         return $this->render('AppBundle:Tag:index.html.twig', array(
             'tags' => $tags,
@@ -40,13 +40,13 @@ class TagController extends Controller
     public function newAction(Request $request)
     {
         $tag = new Tag();
-        $form = $this->createForm('AppBundle\Form\TagType', $tag);
+        $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($tag);
-            $em->flush($tag);
+            $em->flush();
 
             return $this->redirectToRoute('tag_show', array('id' => $tag->getId()));
         }
@@ -65,7 +65,9 @@ class TagController extends Controller
      */
     public function showAction(Tag $tag)
     {
-        $deleteForm = $this->createDeleteForm($tag);
+        $deleteForm = $this->createForm(TagDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
+        ]);
 
         return $this->render('AppBundle:Tag:show.html.twig', array(
             'tag' => $tag,
@@ -81,8 +83,10 @@ class TagController extends Controller
      */
     public function editAction(Request $request, Tag $tag)
     {
-        $deleteForm = $this->createDeleteForm($tag);
-        $editForm = $this->createForm('AppBundle\Form\TagType', $tag);
+        $deleteForm = $this->createForm(TagDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
+        ]);
+        $editForm = $this->createForm(TagType::class, $tag);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -106,31 +110,17 @@ class TagController extends Controller
      */
     public function deleteAction(Request $request, Tag $tag)
     {
-        $form = $this->createDeleteForm($tag);
+        $form = $this->createForm(TagDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($tag);
-            $em->flush($tag);
+            $em->flush();
         }
 
         return $this->redirectToRoute('tag_index');
-    }
-
-    /**
-     * Creates a form to delete a tag entity.
-     *
-     * @param Tag $tag The tag entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Tag $tag)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('tag_delete', array('id' => $tag->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

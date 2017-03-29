@@ -1,8 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Auteur;
+use AppBundle\Form\AuteurType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Auteur controller.
  *
- * @Route("auteur")
+ * @Route("/admin/auteur")
  */
 class AuteurController extends Controller
 {
@@ -23,9 +24,7 @@ class AuteurController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $auteurs = $em->getRepository('AppBundle:Auteur')->findAll();
+        $auteurs = $this->getDoctrine()->getRepository(Auteur::class)->findAll();
 
         return $this->render('AppBundle:Auteur:index.html.twig', array(
             'auteurs' => $auteurs,
@@ -41,13 +40,13 @@ class AuteurController extends Controller
     public function newAction(Request $request)
     {
         $auteur = new Auteur();
-        $form = $this->createForm('AppBundle\Form\AuteurType', $auteur);
+        $form = $this->createForm(AuteurType::class, $auteur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($auteur);
-            $em->flush($auteur);
+            $em->flush();
 
             return $this->redirectToRoute('auteur_show', array('id' => $auteur->getId()));
         }
@@ -66,7 +65,9 @@ class AuteurController extends Controller
      */
     public function showAction(Auteur $auteur)
     {
-        $deleteForm = $this->createDeleteForm($auteur);
+        $deleteForm = $this->createForm(AuteurDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('auteur_delete', ['id' => $auteur->getId()])
+        ]);
 
         return $this->render('AppBundle:Auteur:show.html.twig', array(
             'auteur' => $auteur,
@@ -82,8 +83,10 @@ class AuteurController extends Controller
      */
     public function editAction(Request $request, Auteur $auteur)
     {
-        $deleteForm = $this->createDeleteForm($auteur);
-        $editForm = $this->createForm('AppBundle\Form\AuteurType', $auteur);
+        $deleteForm = $this->createForm(AuteurDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('auteur_delete', ['id' => $auteur->getId()])
+        ]);
+        $editForm = $this->createForm(AuteurType::class, $auteur);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -107,31 +110,17 @@ class AuteurController extends Controller
      */
     public function deleteAction(Request $request, Auteur $auteur)
     {
-        $form = $this->createDeleteForm($auteur);
+        $form = $this->createForm(AuteurDeleteType::class, $auteur, [
+            'action' => $this->generateUrl('auteur_delete', ['id' => $auteur->getId()])
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($auteur);
-            $em->flush($auteur);
+            $em->flush();
         }
 
         return $this->redirectToRoute('auteur_index');
-    }
-
-    /**
-     * Creates a form to delete a auteur entity.
-     *
-     * @param Auteur $auteur The auteur entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Auteur $auteur)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('auteur_delete', array('id' => $auteur->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

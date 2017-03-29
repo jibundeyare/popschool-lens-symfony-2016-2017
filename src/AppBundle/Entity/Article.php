@@ -33,7 +33,7 @@ class Article
      *      min = 1,
      *      max = 255
      * )
-     * @ORM\Column(name="titre", type="string", length=255)
+     * @ORM\Column()
      */
     private $titre;
 
@@ -41,14 +41,14 @@ class Article
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="corps", type="text")
+     * @ORM\Column(type="text")
      */
     private $corps;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="publication", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $publication;
 
@@ -69,7 +69,7 @@ class Article
      *      max = 3
      * )
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="articles")
-     * @ORM\JoinTable(name="articles_tags")
+     * @ORM\JoinTable()
      */
     private $tags;
 
@@ -194,7 +194,7 @@ class Article
      */
     public function addTag(Tag $tag)
     {
-        $this->tags[] = $tag;
+        $this->tags->add($tag);
 
         return $this;
     }
