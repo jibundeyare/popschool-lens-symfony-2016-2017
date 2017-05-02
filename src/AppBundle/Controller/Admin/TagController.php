@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Tag;
+use AppBundle\Form\TagDeleteType;
 use AppBundle\Form\TagType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -65,7 +66,7 @@ class TagController extends Controller
      */
     public function showAction(Tag $tag)
     {
-        $deleteForm = $this->createForm(TagDeleteType::class, $auteur, [
+        $deleteForm = $this->createForm(TagDeleteType::class, $tag, [
             'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
         ]);
 
@@ -83,7 +84,7 @@ class TagController extends Controller
      */
     public function editAction(Request $request, Tag $tag)
     {
-        $deleteForm = $this->createForm(TagDeleteType::class, $auteur, [
+        $deleteForm = $this->createForm(TagDeleteType::class, $tag, [
             'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
         ]);
         $editForm = $this->createForm(TagType::class, $tag);
@@ -110,7 +111,7 @@ class TagController extends Controller
      */
     public function deleteAction(Request $request, Tag $tag)
     {
-        $form = $this->createForm(TagDeleteType::class, $auteur, [
+        $form = $this->createForm(TagDeleteType::class, $tag, [
             'action' => $this->generateUrl('tag_delete', ['id' => $tag->getId()])
         ]);
         $form->handleRequest($request);
