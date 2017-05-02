@@ -21,6 +21,7 @@ class ArticleType extends AbstractType
             ->add('titre')
             ->add('corps')
             ->add('publication')
+            ->add('publie')
             ->add('auteur', EntityType::class, [
                 'class' => Auteur::class,
                 'choice_label' => function($auteur) {

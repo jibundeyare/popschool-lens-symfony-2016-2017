@@ -31,4 +31,36 @@ class ArticleRepository extends \Doctrine\ORM\EntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * Renvoie la liste des articles publiés, triée par date de publication et par nom d'auteur
+     */
+    public function findAllPublieSortedByDateAndAuteurNom()
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.auteur', 'aut')
+            ->where('a.publie = :publie')
+            ->setParameter('publie', true)
+            ->addOrderBy('a.publication', 'DESC')
+            ->addOrderBy('aut.nom', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Renvoie la liste des articles non publiés, triée par date de publication et par nom d'auteur
+     */
+    public function findAllNonPublieSortedByDateAndAuteurNom()
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.auteur', 'aut')
+            ->where('a.publie = :publie')
+            ->setParameter('publie', false)
+            ->addOrderBy('a.publication', 'DESC')
+            ->addOrderBy('aut.nom', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

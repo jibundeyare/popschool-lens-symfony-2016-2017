@@ -10,6 +10,7 @@
                 <th>Titre</th>
                 <th>Corps</th>
                 <th>Publication</th>
+                <th>Publié</th>
                 <th>Auteur</th>
                 <th>Tags</th>
                 <th>Actions</th>
@@ -22,6 +23,7 @@
                 <td>{{ article.titre }}</td>
                 <td>{{ article.corps }}</td>
                 <td>{% if article.publication %}{{ article.publication|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if article.publie %}publié{% else %}non publié{% endif %}</td>
                 <td>{% if article.auteur %} {{ article.auteur.prenom }} {{ article.auteur.nom }} {% endif %}</td>
                 <td>
                     {% for tag in article.tags %}

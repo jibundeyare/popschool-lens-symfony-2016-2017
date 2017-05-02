@@ -53,6 +53,13 @@ class Article
     private $publication;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $publie;
+
+    /**
      * @var Auteur
      *
      * @Assert\NotBlank()
@@ -159,6 +166,30 @@ class Article
     public function getPublication()
     {
         return $this->publication;
+    }
+
+    /**
+     * Set publie
+     *
+     * @param boolean $publie
+     *
+     * @return Article
+     */
+    public function setPublie($publie)
+    {
+        $this->publie = $publie;
+
+        return $this;
+    }
+
+    /**
+     * Get publie
+     *
+     * @return boolean
+     */
+    public function getPublie()
+    {
+        return $this->publie;
     }
 
     /**

@@ -22,6 +22,10 @@
                 <td>{% if article.publication %}{{ article.publication|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
             <tr>
+                <th>Publié</th>
+                <td>{% if article.publie %}publié{% else %}non publié{% endif %}</td>
+            </tr>
+            <tr>
                 <th>Auteur</th>
                 <td>{% if article.auteur %}{{ article.auteur.prenom }} {{ article.auteur.nom }}{% endif %}</td>
             </tr>
